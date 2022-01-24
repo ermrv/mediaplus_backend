@@ -10,8 +10,7 @@ module.exports = {
     imagepost: require("./schema/post/imagepost"),
     videopost: require("./schema/post/videopost"),
     textpost: require("./schema/post/textpost"),
-   
-    pollpost: require("./schema/post/poll"),
+    pollpost: require("./schema/post/pollpost"),
    
 
 

@@ -48,7 +48,7 @@ const PostSchema = new mongoose.Schema({
   },
   pollPost: {
     type: Schema.Types.ObjectId,
-    ref: 'Poll'
+    ref: 'PollPost'
   },
   // eventPost: {
   //   type: Schema.Types.ObjectId,

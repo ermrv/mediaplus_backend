@@ -1,6 +1,6 @@
 //.........................ALL Imports............................
 const db = require('../../models');
-const Poll = require('../../models/schema/post/poll');
+const Poll = require('../../models/schema/post/pollpost');
 
 
 
