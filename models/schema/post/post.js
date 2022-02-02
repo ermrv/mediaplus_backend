@@ -24,6 +24,8 @@ const PostSchema = new mongoose.Schema({
     type: Schema.Types.ObjectId,
     ref: 'User',
   }],
+  commentOption:String,
+  sharingOption:String,
   postContentType: {
     type: String,
     enum: ["image", "poll", "event", "contest", "video", 'text'],
@@ -382,7 +384,7 @@ PostSchema.statics.distributePosts = async function (userId, postId) {
 }
 
 // to reverify after post add api
-PostSchema.statics.createNewPost = async function (postContentType, primary, sharedDescription, mentions, postId, userId, postLocation, hashtags) {
+PostSchema.statics.createNewPost = async function (postContentType, primary, sharedDescription, mentions, postId, userId, postLocation, hashtags,commentOption, sharingOption) {
   try {
     if (!postContentType || !postId || !userId) {
       return "Enter required fields."
@@ -397,6 +399,8 @@ PostSchema.statics.createNewPost = async function (postContentType, primary, sha
         postLocation: postLocation,
         sharedDescription: sharedDescription,
         mentions: mentions,
+        commentOption:commentOption,
+        sharingOption:sharingOption,
         postCreated: Date.now(),
       }
       newPost[type] = postId

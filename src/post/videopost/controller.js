@@ -6,7 +6,7 @@ const db = require('../../../models');
 
 exports.addNewPost = async (req, res) => {
   try {
-    const { postLocation, location, description, mentions,  aspectRatio, templateType } = req.body
+    const { postLocation, location, description, mentions, aspectRatio, templateType, commentOption, sharingOption } = req.body
     const postContentType = "video"
     if (req.files.length == 1) {
       const videoPost = await db.videopost.createVideoPost(description, mentions, aspectRatio, templateType, location, req)
@@ -15,12 +15,12 @@ exports.addNewPost = async (req, res) => {
       const primary = true
       const sharedDescription = null
 
-      var response = await db.post.createNewPost(postContentType, primary, sharedDescription, mentions, videoPost._id, req.userData.userId, postLocation, videoPost.hashtags)
+      var response = await db.post.createNewPost(postContentType, primary, sharedDescription, mentions, videoPost._id, req.userData.userId, postLocation, videoPost.hashtags, commentOption, sharingOption)
 
       //..................................................................
       // update to short videos
       if (response.videoPost.shortVideo) {
-        await db.postview.findByIdAndUpdate({ _id: "613b26eae8548fc8339af207" }, { $addToSet: { shortVideos: response._id }})
+        await db.postview.findByIdAndUpdate({ _id: "613b26eae8548fc8339af207" }, { $addToSet: { shortVideos: response._id } })
       }
 
       res.status(200).json(response)
