@@ -24,8 +24,8 @@ const PostSchema = new mongoose.Schema({
     type: Schema.Types.ObjectId,
     ref: 'User',
   }],
-  commentOption:String,
-  sharingOption:String,
+  commentOption: String,
+  sharingOption: String,
   postContentType: {
     type: String,
     enum: ["image", "poll", "event", "contest", "video", 'text'],
@@ -384,7 +384,7 @@ PostSchema.statics.distributePosts = async function (userId, postId) {
 }
 
 // to reverify after post add api
-PostSchema.statics.createNewPost = async function (postContentType, primary, sharedDescription, mentions, postId, userId, postLocation, hashtags,commentOption, sharingOption) {
+PostSchema.statics.createNewPost = async function (postContentType, primary, sharedDescription, mentions, postId, userId, postLocation, hashtags, commentOption, sharingOption) {
   try {
     if (!postContentType || !postId || !userId) {
       return "Enter required fields."
@@ -399,8 +399,8 @@ PostSchema.statics.createNewPost = async function (postContentType, primary, sha
         postLocation: postLocation,
         sharedDescription: sharedDescription,
         mentions: mentions,
-        commentOption:commentOption,
-        sharingOption:sharingOption,
+        commentOption: commentOption,
+        sharingOption: sharingOption,
         postCreated: Date.now(),
       }
       newPost[type] = postId
@@ -411,10 +411,12 @@ PostSchema.statics.createNewPost = async function (postContentType, primary, sha
       // send to post distributor( controls where post will be shown)
       await this.distributePosts(userId, data._id)
 
-      // update tags
-      if (data.hashtags) {
+      try {
+        // update tags
         var Tag = require('../tag')
         update = await Tag.updateTags(data.hashtags, data._id)
+      } catch (error) {
+        console.log(error)
       }
 
       return data;
@@ -424,7 +426,7 @@ PostSchema.statics.createNewPost = async function (postContentType, primary, sha
   }
 }
 
-PostSchema.statics.sharePost = async function (postContentType, primary, sharedDescription, mentions,  postId, userId, postLocation) {
+PostSchema.statics.sharePost = async function (postContentType, primary, sharedDescription, mentions, postId, userId, postLocation, commentOption, sharingOption) {
   try {
     if (!postContentType || !postId || !userId) {
       return "Enter required fields."
@@ -435,6 +437,8 @@ PostSchema.statics.sharePost = async function (postContentType, primary, sharedD
         postContentType: postContentType,
         primary: primary,
         postBy: userId,
+        commentOption: commentOption,
+        sharingOption: sharingOption,
         postLocation: postLocation,
         sharedDescription: sharedDescription,
         mentions: mentions,
@@ -451,9 +455,13 @@ PostSchema.statics.sharePost = async function (postContentType, primary, sharedD
       // send to post distributor( controls where post will be shown)
       await this.distributePosts(userId, data._id)
 
-      // update tags
-      var Tag = require('../tag')
-      update = await Tag.updateTags(data.hashtags, data._id)
+      try {
+        // update tags
+        var Tag = require('../tag')
+        update = await Tag.updateTags(data.hashtags, data._id)
+      } catch (error) {
+        console.log(error)
+      }
 
       // increase no of share to original post (add shared post id to original post )
 

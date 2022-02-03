@@ -390,7 +390,9 @@ exports.sharePost = async (req, res) => {
 
         const postContentType = postData.postContentType
         const primary = false
-        response = await db.post.sharePost(postContentType, primary, sharedDescription, mentions,  postId, req.userData.userId, postLocation)
+        const commentOption=postData.commentOption
+        const sharingOption=postData.sharingOption
+        response = await db.post.sharePost(postContentType, primary, sharedDescription, mentions,  postId, req.userData.userId, postLocation,commentOption,sharingOption)
 
         //for log
         reactType = "share"
@@ -409,6 +411,7 @@ exports.sharePost = async (req, res) => {
       }
     }
   } catch (error) {
+    console.log(error)
     return res.status(500).json({ error: error.message });
   }
 }

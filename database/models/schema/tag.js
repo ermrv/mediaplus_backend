@@ -24,24 +24,25 @@ const TagSchema = new mongoose.Schema({
 
 TagSchema.statics.updateTags = async function (hashtags, postId) {
   try {
-
-    for (let i = 0; i < hashtags.length; i++) {
-      tag = await this.findOne({ hashtag: hashtags[i].toLowerCase() })
-      if (tag) {
-        // update existing ( add post id and increase count)
-        updateTag = await this.findByIdAndUpdate({ _id: tag._id }, { $inc: { 'count': 1 }, $addToSet: { posts: postId } })
-      } else {
-        // create new
-        hashtagData = {
-          posts: postId,
-          hashtag: hashtags[i].toLowerCase(),
-          count: 1
+    if (hashtags) {
+      for (let i = 0; i < hashtags.length; i++) {
+        tag = await this.findOne({ hashtag: hashtags[i].toLowerCase() })
+        if (tag) {
+          // update existing ( add post id and increase count)
+          updateTag = await this.findByIdAndUpdate({ _id: tag._id }, { $inc: { 'count': 1 }, $addToSet: { posts: postId } })
+        } else {
+          // create new
+          hashtagData = {
+            posts: postId,
+            hashtag: hashtags[i].toLowerCase(),
+            count: 1
+          }
+          createNew = this.create(hashtagData)
         }
-        createNew = this.create(hashtagData)
       }
+      return tag;
     }
 
-    return tag;
   } catch (error) {
     throw error;
   }
