@@ -5,8 +5,8 @@ const morgan = require("morgan");
 const http = require('http');
 
 // MongoDB Connection
-const mongo = require('./db/connection')
-const db = require('./models')
+const mongo = require('./database/connection')
+const db = require('./database/models')
 
 // // socket configuration
 // const WebSockets = require('./utils/WebSockets.js');
@@ -46,7 +46,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //..........................Routes..............................
 app.get('/', (req, res) => res.json({ message: "You are on homepage" }))
-app.use('/api', require('./routes/index'));
+app.use('/api', require('./routes/routes'));
 
 /** Create HTTP server. */
 const server = http.createServer(app);

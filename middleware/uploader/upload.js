@@ -1,5 +1,5 @@
 const multer = require('multer');
-const db = require('../../models');
+const db = require('../../database/models');
 
 
 // thumbnail filter
