@@ -48,6 +48,17 @@ TagSchema.statics.updateTags = async function (hashtags, postId) {
   }
 }
 
+TagSchema.statics.getTrendingTags = async function () {
+  try {
+    trendingTags = this.find({},"_id hashtag count")
+    return trendingTags;
+
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 
 TagSchema.plugin(mongoosastic, {
   'host': "localhost",
