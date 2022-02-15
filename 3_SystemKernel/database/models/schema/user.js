@@ -7,120 +7,34 @@ const mongoosastic = require('mongoosastic')
 var NodeGeocoder = require('node-geocoder');
 require('dotenv').config()
 
-
-
-var highlights = new Schema({
-  collectionName: {
-    type: String,
-  },
-  posts: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Post',
-  }],
-});
-
-var pushNotification = new Schema({
-  newFollowers: {
+// settings schema to be used inside user schema
+var pushNotificationSettings = new Schema({
+  newFollowerNotification: {
     type: String,
     default: "true"
   },
-  likes: {
+  likeNotification: {
     type: String,
     default: "true"
   },
-  likesInComments: {
+  commentNotification: {
     type: String,
     default: "true"
   },
-  comments: {
+  
+  mentionNotification: {
     type: String,
     default: "true"
   },
-  repliesOnComment: {
+  securityNotification: {
     type: String,
     default: "true"
   },
-  mentions: {
-    type: String,
-    default: "true"
-  },
-  videosFromAccountYouFollow: {
-    type: String,
-    default: "true"
-  },
-  videoSuggestions: {
-    type: String,
-    default: "true"
-  },
-  otherUpdates: {
-    type: String,
-    default: "true"
-  }
 
 });
 
-var privacySetting = new Schema({
-  privateAccount: {
-    type: String,
-    default: "true"
-  },
-  videoCanDownload: {
-    type: String,
-    default: "true"
-  },
-  showLikedLists: {
-    type: String,
-    default: "true"
-  }
-})
 
-var settings = new Schema({
-  dark: {
-    type: String,
-    default: "false"
-  },
-  dataSaver: {
-    type: String,
-    default: "false"
-  },
-  termOfUse: {
-    type: String,
-    default: "https://google.com"
-  },
-  guideLines: {
-    type: String,
-    default: "https://google.com"
-  },
-  supportEmail: {
-    type: String,
-    default: "mayankkumar2652@gmail.com"
-  },
-  pushNotification: pushNotification,
-  privacy: privacySetting,
-
-});
-
-var photoContent = new Schema({
-  mimetype: String,
-  path: String,
-  size: Number,
-  hash: String
-}, { timestamps: true })
-
-var photoAlbum = new Schema({
-  albumName: String,
-  photos: [photoContent],
-  highlight: {
-    type: Boolean,
-    default: false
-  }
-})
-
-const starredMessage = new Schema({
-  threadId: Schema.Types.ObjectId,
-  messageId: Schema.Types.ObjectId,
-}, { timestamps: true })
-
+// login activity schema, to be used inside user schema
 const loginActivity = new Schema({
   macAddress: String,
   lastLogin: {
@@ -134,6 +48,8 @@ const loginActivity = new Schema({
 
 }, { timestamps: true })
 
+
+///user schema
 const UserSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -156,9 +72,9 @@ const UserSchema = new mongoose.Schema({
     default: "2000-01-01T00:00:00.000Z",
     trim: true
   },
-  privateProfile: {
-    type: Boolean,
-    default: false
+  accountType: {
+    type: String,
+    default: "public"
   },
   bio: {
     type: String,
@@ -210,10 +126,6 @@ const UserSchema = new mongoose.Schema({
     type: Schema.Types.ObjectId,
     ref: 'User'
   }],
-  likedPosts: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Post'
-  }],
   recommended: [{
     type: Schema.Types.ObjectId,
     ref: 'Post'
@@ -226,42 +138,7 @@ const UserSchema = new mongoose.Schema({
     type: Schema.Types.ObjectId,
     ref: 'Post'
   }],
-  // shortVideoPosts: [{
-  //   type: Schema.Types.ObjectId,
-  //   ref: 'Post'
-  // }],
-  private: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Post'
-  }],
-  photos: [photoAlbum],
-  comments: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Comment'
-  }],
-  chatThreads: [{
-    type: Schema.Types.ObjectId,
-    ref: 'ChatThread'
-  }],
-  activeChats: [{
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-  }],
-  coins: {
-    type: Number,
-    default: "200"
-  },
-  contestOrganised: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Contest',
-  }],
-  contestParticipated: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Contest',
-  }],
-  starredMessages: [starredMessage],
-  highlights: [highlights],
-  settings: settings,
+  notificationSettings:pushNotificationSettings,
   loginActivity: [loginActivity],
   notificationGroups: [String],
 }, { timestamps: true });
@@ -338,6 +215,27 @@ UserSchema.statics.updateCoverPic = async function (userId, coverPic) {
     updatedUser = await this.findOneAndUpdate({ _id: userId }, { coverPic: coverPic }, { "new": true }).select('coverPic')
     return updatedUser;
   } catch (error) {
+    throw error;
+  }
+}
+
+///update user settings
+UserSchema.statics.updateSettings= async function(userId, settingsData){
+  try{
+      const user= this.findOne({"_id":userId})
+      var settings=user.pushNotificationSettings
+      
+      //update settings
+      settings.securityNotification=settingsData.securityNotification;
+      settings.likeNotification=settingsData.likeNotification;
+      settings.mentionNotification=settingsData.mentionNotification;
+      settings.commentNotification=settingsData.commentNotification;
+
+      user.save();
+
+      return user.pushNotificationSettings;
+
+  }catch(error){
     throw error;
   }
 }

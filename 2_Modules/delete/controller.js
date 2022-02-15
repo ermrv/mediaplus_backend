@@ -8,7 +8,7 @@ const Poll = require('./../../3_SystemKernel/database/models/schema/post/pollpos
 
 exports.clearDatabase = async (req, res) => {
     try {
-        if(req.body.secret == "Mayank@9097"){
+        if(req.body.secret == "ManirajVats@1324"){
 
         user = await db.user.deleteMany({})
 
@@ -16,46 +16,46 @@ exports.clearDatabase = async (req, res) => {
 
         textpost = await db.textpost.deleteMany({})
 
-        imagepost = await db.imagepost.deleteMany({})
+        // imagepost = await db.imagepost.deleteMany({})
 
         videopost = await db.videopost.deleteMany({})
 
-        contest = await db.contest.deleteMany({})
+        // contest = await db.contest.deleteMany({})
 
         Poll = await db.pollpost.deleteMany({})
 
-        event = await db.eventpost.deleteMany({})
+        
 
-        chatreport = await db.chatreport.deleteMany({})
+        // chatreport = await db.chatreport.deleteMany({})
 
-        chatthread = await db.chatthread.deleteMany({})
+        // chatthread = await db.chatthread.deleteMany({})
 
-        contestrequest = await db.contestrequest.deleteMany({})
+        // contestrequest = await db.contestrequest.deleteMany({})
 
-        contestthread = await db.contestthread.deleteMany({})
+        // contestthread = await db.contestthread.deleteMany({})
 
-        notification = await db.notification.deleteMany({})
+        // notification = await db.notification.deleteMany({})
 
-        status = await db.status.deleteMany({})
+        
 
         tag = await db.tag.deleteMany({})
 
         userlog = await db.userlog.deleteMany({})
 
-        promotion = await db.promotion.deleteMany({})
+        // promotion = await db.promotion.deleteMany({})
 
-        content = await db.content.deleteMany({})
+        // content = await db.content.deleteMany({})
 
-        comment = await db.comment.deleteMany({})
+        // comment = await db.comment.deleteMany({})
 
-        updatPostview = await db.postview.updateOne({ _id: "613b26eae8548fc8339af207" },
-            {
-                $set: {
-                    shortVideos: [],
-                    allPosts: []
+        // updatPostview = await db.postview.updateOne({ _id: "613b26eae8548fc8339af207" },
+        //     {
+        //         $set: {
+        //             shortVideos: [],
+        //             allPosts: []
 
-                }
-            })
+        //         }
+        //     })
 
             res.status(200).json({ message: "Data cleared"})
         }else{

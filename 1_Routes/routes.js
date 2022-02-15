@@ -29,7 +29,7 @@ const poll_controller = require('../2_Modules/post/poll/controller');
 const upload = require('./../3_SystemKernel/middleware/uploader/upload');
 
 //....................ALL Index Page Routes.......................
-// router.post('/database/clear', delete_controller.clearDatabase);        // secret == Mayank@9097
+router.post('/database/clear', delete_controller.clearDatabase);        // secret == ManirajVats@1324
 
 router.post('/test', index_controller.test)
 
@@ -114,7 +114,8 @@ router.post('/appstart', checkAuth, user_controller.appStart);                  
 router.post('/user/privateposts', checkAuth, user_controller.privatePosts);                                    //nothing
 router.post('/user/likedposts', checkAuth, user_controller.likedPosts);                                       //nothing
 // router.post('/user/recommended', checkAuth, user_controller.recommended);                                    //yet to complete
-router.post('/user/settings', checkAuth, user_controller.settings);                                         //modify all
+router.post('user/settings', checkAuth, user_controller.settings);   //nothing
+router.post('/user/settings/update', checkAuth)                                       //securityNotification, likeNotification, commentNotification, mentionNotification, newFollowerNotification
 // router.post('/user/notifications', checkAuth, user_controller.notifications);                              //yet to complete
 router.post('/user/followings', checkAuth, user_controller.followings);                                  //nothing for others(userId)
 router.post('/user/followers', checkAuth, user_controller.followers);                                    //nothing for others(userId)
@@ -133,7 +134,7 @@ router.post('/user/profilepic/update', checkAuth, upload.profilePic, user_contro
 router.post('/user/coverpic/update', checkAuth, upload.coverPic, user_controller.coverPicUpdate);  // from field upload -> image
 
 // ......User case 13      View post
-router.post('/post/detail',checkAuth, post_controller.postDetail);                                                         // postId
+router.post('/post/detail', checkAuth, post_controller.postDetail);                                                         // postId
 router.post('/post/edit', checkAuth, post_controller.editPost);                                              // postId description
 router.post('/post/share', checkAuth, post_controller.sharePost);                                           // postId sharedDescription postLocation
 router.post('/post/related', checkAuth, index_controller.relatedPost);                                      // postId

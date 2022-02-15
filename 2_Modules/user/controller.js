@@ -130,6 +130,25 @@ exports.settings = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 }
+//update user settings
+exports.updateSettings = async (req, res) => {
+  try {
+    const { securityNotification, mentionNotification, likeNotification, commentNotification } = req.body;
+    const userSettings = {
+      securityNotification,
+      mentionNotification,
+      likeNotification,
+      commentNotification
+    };
+    const updatedSettngs= await db.user.updateSettings(req.userData.userId, userSettings);
+    res.status(200).json(updatedSettngs);
+
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({ error: error.message });
+
+  }
+}
 
 //todo 
 exports.notifications = async (req, res) => {
