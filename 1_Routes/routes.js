@@ -114,8 +114,9 @@ router.post('/appstart', checkAuth, user_controller.appStart);                  
 router.post('/user/privateposts', checkAuth, user_controller.privatePosts);                                    //nothing
 router.post('/user/likedposts', checkAuth, user_controller.likedPosts);                                       //nothing
 // router.post('/user/recommended', checkAuth, user_controller.recommended);                                    //yet to complete
-router.post('user/settings', checkAuth, user_controller.settings);   //nothing
-router.post('/user/settings/update', checkAuth)                                       //securityNotification, likeNotification, commentNotification, mentionNotification, newFollowerNotification
+router.post('/user/settings', checkAuth, user_controller.settings);   //nothing
+router.post('/user/settings/update', checkAuth, user_controller.updateSettings)                                       //securityNotification, likeNotification, commentNotification, mentionNotification, newFollowerNotification
+router.post('/user/private', checkAuth, user_controller.updateAccountType)                               //accountType
 // router.post('/user/notifications', checkAuth, user_controller.notifications);                              //yet to complete
 router.post('/user/followings', checkAuth, user_controller.followings);                                  //nothing for others(userId)
 router.post('/user/followers', checkAuth, user_controller.followers);                                    //nothing for others(userId)

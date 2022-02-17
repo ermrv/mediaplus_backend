@@ -8,25 +8,25 @@ var NodeGeocoder = require('node-geocoder');
 require('dotenv').config()
 
 // settings schema to be used inside user schema
-var pushNotificationSettings = new Schema({
-  newFollowerNotification: {
+const pushNotificationSettings = new Schema({
+  newFollower: {
     type: String,
     default: "true"
   },
-  likeNotification: {
+  like: {
     type: String,
     default: "true"
   },
-  commentNotification: {
+  comment: {
     type: String,
     default: "true"
   },
-  
-  mentionNotification: {
+
+  mention: {
     type: String,
     default: "true"
   },
-  securityNotification: {
+  security: {
     type: String,
     default: "true"
   },
@@ -138,7 +138,10 @@ const UserSchema = new mongoose.Schema({
     type: Schema.Types.ObjectId,
     ref: 'Post'
   }],
-  notificationSettings:pushNotificationSettings,
+  notificationSettings: {
+    type: pushNotificationSettings,
+    default: {},
+  },
   loginActivity: [loginActivity],
   notificationGroups: [String],
 }, { timestamps: true });
@@ -220,22 +223,23 @@ UserSchema.statics.updateCoverPic = async function (userId, coverPic) {
 }
 
 ///update user settings
-UserSchema.statics.updateSettings= async function(userId, settingsData){
-  try{
-      const user= this.findOne({"_id":userId})
-      var settings=user.pushNotificationSettings
-      
-      //update settings
-      settings.securityNotification=settingsData.securityNotification;
-      settings.likeNotification=settingsData.likeNotification;
-      settings.mentionNotification=settingsData.mentionNotification;
-      settings.commentNotification=settingsData.commentNotification;
+UserSchema.statics.updateSettings = async function (userId, settingsData) {
+  try {
+    const updatedSettings = this.findOneAndUpdate({ _id: userId }, { notificationSettings: settingsData }, { "new": true }).select("notificationSettings");
+    return updatedSettings;
 
-      user.save();
+  } catch (error) {
+    throw error;
+  }
+}
 
-      return user.pushNotificationSettings;
 
-  }catch(error){
+//update account Type
+UserSchema.statics.updateAccountType = async function (userId, accountType) {
+  try {
+    const result = this.findOneAndUpdate({ _id: userId }, { accountType: accountType }, { "new": true }).select("accountType");
+    return result;
+  } catch (error) {
     throw error;
   }
 }

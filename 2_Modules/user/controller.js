@@ -21,8 +21,8 @@ exports.appStart = async (req, res) => {
     // here write the function to remove unused status from content table 
 
 
-    const userdata = await db.user.findById({ _id: req.userData.userId }, 'name username profilePic coverPic followers bio following blocked email mobile highlights')
-      .populate('highlights.posts', '')
+    const userdata = await db.user.findById({ _id: req.userData.userId }, 'name username profilePic coverPic followers bio following blocked email mobile accountType')
+      .populate('')
     res.status(200).json({
       userdata,
       fcmToken
@@ -124,7 +124,7 @@ exports.settings = async (req, res) => {
     var result = await db.user.findById({
       _id: req.userData.userId
     })
-    res.status(200).json(result.settings)
+    res.status(200).json(result.notificationSettings)
   } catch (error) {
     console.log(error)
     return res.status(500).json({ error: error.message });
@@ -133,15 +133,43 @@ exports.settings = async (req, res) => {
 //update user settings
 exports.updateSettings = async (req, res) => {
   try {
-    const { securityNotification, mentionNotification, likeNotification, commentNotification } = req.body;
+    //1....process the incoming data
+    const { newFollower, security, mention, like, comment } = req.body;
     const userSettings = {
-      securityNotification,
-      mentionNotification,
-      likeNotification,
-      commentNotification
+      newFollower,
+      security,
+      mention,
+      like,
+      comment
     };
-    const updatedSettngs= await db.user.updateSettings(req.userData.userId, userSettings);
+
+    //2.....get the required data
+    const updatedSettngs = await db.user.updateSettings(req.userData.userId, userSettings);
+
+    //3....process the response data
     res.status(200).json(updatedSettngs);
+
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({ error: error.message });
+
+  }
+}
+
+//update account Type
+exports.updateAccountType = async (req, res) => {
+  try {
+    //step 1
+    const { accountType } = req.body;
+    const userId = req.userData.userId;
+
+    //step 2
+    const result = await db.user.updateAccountType(userId, accountType);
+
+    //step 3
+    res.status(200).json(result);
+
+
 
   } catch (error) {
     console.log(error)
